@@ -5,6 +5,7 @@ import Navigation from './components/navigation/navigation';
 import Logo from './components/Logo/Logo';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import Rank from './components/Rank/Rank';
+import Faceerecognition from './components/Faceerecognition/Faceerecognition';
 
 const app = new Clarifai.App({
   apiKey: 'API Key'
@@ -16,16 +17,20 @@ class App extends Component {
     super();
     this.state = {
       input: '',
-
+      imageUrl: ''
     }
   }
   onInputChange = (event) => {
-    console.log(event.target.value);
+    this.setState({input: event.target.value});
   }
   onButtonSubmite = () => {
+    this.setState({imageUrl: this.state.input})
     console.log('click')
-    App.models.predict("Api Key", "HTTP:link").then(
-      function(rsponse) {
+    App.models.predict(
+       Clarifai.FACE_DETECT_MODEL,
+       this.state.input)
+      .then(
+      function(response) {
 
       },
       function(errr) {
@@ -43,8 +48,7 @@ class App extends Component {
        onInputChange={this.onInputChange} 
        onButtonSubmite={this.onButtonSubmite} 
        />
-      {/* 
-      <Faceerecognition /> */}
+      <Faceerecognition imageUrl={this.state.imageUrl} />
     </div>
     );
   }
